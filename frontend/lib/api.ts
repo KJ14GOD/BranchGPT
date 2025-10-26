@@ -1,5 +1,5 @@
 export type BranchProfile = "researcher" | "engineer" | "critic";
-export type ModelProvider = "llama" | "qwen" | "openai";
+export type ModelProvider = "llama" | "qwen" | "gemma";
 
 export interface Run {
   runId: string;
@@ -35,9 +35,43 @@ export async function ask(
   return res.json();
 }
 
+export async function listModels(): Promise<{ models: { id: string }[] }> {
+  const res = await fetch(`${BASE_URL}/models`);
+  if (!res.ok) throw new Error(`models fetch failed: ${res.status}`);
+  return res.json();
+}
+
 export async function getGraph(runId: string): Promise<{ run: Run; branches: Branch[] }> {
   const res = await fetch(`${BASE_URL}/graph/${encodeURIComponent(runId)}`);
   if (!res.ok) throw new Error(`graph fetch failed: ${res.status}`);
+  return res.json();
+}
+
+export interface AskGroqResponse {
+  run: Run;
+  branches: Branch[];
+  nodes: Array<{
+    nodeId: string;
+    branchId: string;
+    stepIndex: number;
+    role: "analysis" | "code" | "benchmark" | "counter";
+    content: string;
+    status: "ok" | "error" | "timeout";
+    createdAt: number;
+  }>;
+  timings: { perBranch: Record<string, number>; wallClockMs: number };
+}
+
+export async function askGroq(
+  question: string,
+  opts: { branchCount?: number; maxDepth?: number; selectedModelIds?: string[]; customPrompts?: any } = {}
+): Promise<AskGroqResponse> {
+  const res = await fetch(`${BASE_URL}/ask-groq`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question, ...opts }),
+  });
+  if (!res.ok) throw new Error(`ask-groq failed: ${res.status}`);
   return res.json();
 }
 

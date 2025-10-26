@@ -1,5 +1,5 @@
 // Configuration for parallelism and model defaults
-export type ModelProvider = 'llama' | 'qwen' | 'openai';
+export type ModelProvider = 'llama' | 'openai' | 'qwen';
 
 export interface ModelEntry {
   provider: ModelProvider;
@@ -32,9 +32,9 @@ export const PARALLELISM_DEFAULTS: ParallelismDefaults = {
 
 // Models defined for groq
 export const MODEL_MATRIX: ModelEntry[] = [
-  { provider: 'llama', modelId: 'llama-3.1-70b',        temperature: 0.2, top_p: 0.9 },
-  { provider: 'qwen',  modelId: 'qwen-2.5-72b-instruct', temperature: 0.2, top_p: 0.9 },
-  { provider: 'openai',modelId: 'gpt-4o-mini',           temperature: 0.2, top_p: 0.9 },
+  { provider: 'llama', modelId: 'llama-3.3-70b-versatile', temperature: 0.2, top_p: 0.9 },
+  { provider: 'qwen', modelId: 'qwen/qwen3-32b',             temperature: 0.2, top_p: 0.9 },
+  { provider: 'openai',  modelId: 'openai/gpt-oss-120b',       temperature: 0.2, top_p: 0.9 },
 ];
 
 // Profiles we’ll use for branches

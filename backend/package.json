@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "@letta-ai/letta-client": "^0.0.68665",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "groq-sdk": "^0.34.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.4",

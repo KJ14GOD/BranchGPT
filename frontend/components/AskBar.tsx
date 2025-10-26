@@ -21,15 +21,15 @@ export default function AskBar({ onAsk }: AskBarProps) {
   }
 
   return (
-    <form onSubmit={submit} className="flex gap-2 blocked p-3 bg-brand-white">
+    <form onSubmit={submit} className="flex gap-3 blocked p-4 bg-brand-white">
       <input
-        className="flex-1 border border-black px-3 py-2 focus:outline-none"
+        className="flex-1 border border-black px-4 py-2 focus:outline-none"
         placeholder="Ask a question..."
         value={q}
         onChange={(e) => setQ(e.target.value)}
       />
       <button
-        className="px-4 py-2 bg-brand-yellow blocked"
+        className="px-5 py-2 bg-brand-yellow blocked"
         type="submit"
         disabled={busy}
       >

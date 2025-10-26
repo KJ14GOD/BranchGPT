@@ -32,10 +32,7 @@ export function buildBranchPlan(
   question: string,
   opts: PlanOptions = {}
 ): OrchestratorPlan {
-  const branchCount = Math.min(
-    Math.max(opts.branchCount ?? PARALLELISM_DEFAULTS.defaultBranchCount, 2),
-    8
-  );
+  const branchCount = Math.max(opts.branchCount ?? PARALLELISM_DEFAULTS.defaultBranchCount, 2);
   const maxDepth = Math.min(
     Math.max(opts.maxDepth ?? PARALLELISM_DEFAULTS.defaultMaxDepth, 1),
     4
@@ -44,14 +41,19 @@ export function buildBranchPlan(
   const seeds = generateBranchSeeds(branchCount, baseSeed);
 
   const profiles: BranchProfile[] = ["researcher", "engineer", "critic"];
-  const providers: ModelProvider[] = ["llama", "qwen", "openai"];
+  const providers: ModelProvider[] = MODEL_MATRIX.map((m) => m.provider) as ModelProvider[];
   const modelByProvider = Object.fromEntries(
     MODEL_MATRIX.map((m) => [m.provider, m.modelId])
-  ) as Record<ModelProvider, string>;
+  ) as Record<string, string>;
 
   const branches: BranchPlanItem[] = Array.from({ length: branchCount }, (_, i) => {
-    const profile = profiles[i % profiles.length];
-    const provider = providers[i % providers.length];
+    // First cycle through all models for each profile
+    // Profile changes every time we've gone through all models
+    const profileIndex = Math.floor(i / providers.length);
+    const providerIndex = i % providers.length;
+    
+    const profile = profiles[profileIndex % profiles.length];
+    const provider = providers[providerIndex];
     return {
       index: i,
       profile,
